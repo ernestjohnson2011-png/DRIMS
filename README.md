@@ -91,4 +91,4 @@ over http instead of double-clicking the file. Easiest options:
   needs a small addition (Firestore `lastSeen` heartbeat) — ask if you want that next
 - ⚠️ Grade 11 Groups in the left menu are still placeholder links
 - ⚠️ Real file uploads (instead of pasted links) need the Blaze plan +
-  Storage — ask if you get a card linked and want that added
+  Storage — ask if you get a card linked and want that added 
