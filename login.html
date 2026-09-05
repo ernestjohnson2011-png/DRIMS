@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -38,15 +38,12 @@
   .brand-side .pitch{margin-top:36px;font-size:15px;line-height:1.7;color:#d7e6f5;}
   .brand-side .pitch strong{color:#fff;}
   .brand-side .foot{font-size:12px;color:#8fb0d3;}
-
   .form-side{flex:1.15;padding:44px 40px;display:flex;flex-direction:column;min-width:300px;}
   .tabs{display:flex;gap:6px;background:var(--sky-light);border-radius:10px;padding:4px;margin-bottom:26px;}
   .tab-btn{flex:1;padding:10px 0;border-radius:8px;font-weight:700;font-size:13.5px;color:var(--muted);transition:.15s;}
   .tab-btn.active{background:var(--navy-deep);color:#fff;}
-
   .form-panel{display:none;flex-direction:column;gap:14px;}
   .form-panel.active{display:flex;}
-
   label{font-size:12.5px;font-weight:700;color:var(--navy-deep);margin-bottom:5px;display:block;}
   .field input{
     width:100%;padding:11px 14px;border-radius:9px;border:1.5px solid var(--border);
@@ -55,12 +52,10 @@
   .field input:focus{border-color:var(--sky);}
   .field{margin-bottom:2px;}
   .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-
   .avatar-picker{display:flex;gap:10px;flex-wrap:wrap;margin-top:2px;}
   .avatar-opt{width:44px;height:44px;border-radius:50%;overflow:hidden;border:3px solid transparent;cursor:pointer;transition:.15s;}
   .avatar-opt img{width:100%;height:100%;object-fit:cover;display:block;}
   .avatar-opt.selected{border-color:var(--sky);}
-
   .btn{
     margin-top:8px;padding:12px 0;border-radius:10px;border:none;font-weight:700;font-size:14.5px;
     background:var(--navy-deep);color:#fff;cursor:pointer;transition:filter .15s,transform .15s;
@@ -69,20 +64,16 @@
   .btn:disabled{background:#b7c6da;cursor:not-allowed;}
   .btn-link{background:none;color:var(--sky);font-weight:600;font-size:12.5px;text-align:right;padding:0;margin-top:-6px;}
   .btn-link:hover{text-decoration:underline;}
-
   .msg{font-size:12.5px;border-radius:8px;padding:9px 12px;display:none;}
   .msg.show{display:block;}
   .msg.error{background:#fdeceb;color:var(--danger);}
   .msg.success{background:#e9f8ef;color:#1f8f52;}
-
   .spinner{width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;display:inline-block;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px;}
   @keyframes spin{to{transform:rotate(360deg);}}
-
   @media (max-width:720px){.wrap{flex-direction:column;}.brand-side{min-width:auto;}}
 </style>
 </head>
 <body>
-
 <div class="wrap">
   <div class="brand-side">
     <div>
@@ -92,15 +83,12 @@
     </div>
     <p class="foot">Built by grade 11, for grade 11. 💙</p>
   </div>
-
   <div class="form-side">
     <div class="tabs">
       <button class="tab-btn active" data-tab="login">Log In</button>
       <button class="tab-btn" data-tab="signup">Sign Up</button>
     </div>
-
     <div id="msgBox" class="msg"></div>
-
     <!-- LOG IN -->
     <form class="form-panel active" id="loginForm">
       <div class="field">
@@ -114,7 +102,6 @@
       <button type="button" class="btn-link" id="forgotBtn">Forgot password?</button>
       <button type="submit" class="btn" id="loginBtn">Log In</button>
     </form>
-
     <!-- SIGN UP -->
     <form class="form-panel" id="signupForm">
       <div class="field">
@@ -149,127 +136,3 @@
     </form>
   </div>
 </div>
-
-<!-- Firebase SDK (compat) -->
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
-<script src="firebase-config.js"></script>
-
-<script>
-/* ---------------- tab switching ---------------- */
-document.querySelectorAll('.tab-btn').forEach(btn=>{
-  btn.addEventListener('click', ()=>{
-    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-    document.querySelectorAll('.form-panel').forEach(p=>p.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById(btn.dataset.tab+'Form').classList.add('active');
-    hideMsg();
-  });
-});
-
-/* ---------------- message helper ---------------- */
-const msgBox = document.getElementById('msgBox');
-function showMsg(text, type){
-  msgBox.textContent = text;
-  msgBox.className = 'msg show '+type;
-}
-function hideMsg(){ msgBox.className='msg'; }
-
-function friendlyError(err){
-  const map = {
-    'auth/email-already-in-use':'That email is already registered — try logging in instead.',
-    'auth/invalid-email':'That email address does not look right.',
-    'auth/weak-password':'Password should be at least 6 characters.',
-    'auth/user-not-found':'No account found with that email.',
-    'auth/wrong-password':'Incorrect password. Try again.',
-    'auth/invalid-credential':'Incorrect email or password.',
-    'auth/too-many-requests':'Too many attempts — please wait a bit and try again.'
-  };
-  return map[err.code] || err.message;
-}
-
-/* ---------------- avatar picker ---------------- */
-const AVATAR_SEEDS = [12,32,51,25,15,47,60,5,64,71];
-let selectedAvatar = `https://i.pravatar.cc/150?img=${AVATAR_SEEDS[0]}`;
-const avatarPicker = document.getElementById('avatarPicker');
-AVATAR_SEEDS.forEach((seed,i)=>{
-  const url = `https://i.pravatar.cc/150?img=${seed}`;
-  const opt = document.createElement('div');
-  opt.className = 'avatar-opt'+(i===0?' selected':'');
-  opt.innerHTML = `<img src="${url}">`;
-  opt.addEventListener('click', ()=>{
-    document.querySelectorAll('.avatar-opt').forEach(o=>o.classList.remove('selected'));
-    opt.classList.add('selected');
-    selectedAvatar = url;
-  });
-  avatarPicker.appendChild(opt);
-});
-
-/* ---------------- if already logged in, skip straight to app ---------------- */
-auth.onAuthStateChanged(user=>{
-  if(user) window.location.href = 'index.html';
-});
-
-/* ---------------- log in ---------------- */
-document.getElementById('loginForm').addEventListener('submit', async e=>{
-  e.preventDefault();
-  hideMsg();
-  const btn = document.getElementById('loginBtn');
-  const email = document.getElementById('loginEmail').value.trim();
-  const password = document.getElementById('loginPassword').value;
-  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>Logging in...';
-  try{
-    await auth.signInWithEmailAndPassword(email, password);
-    window.location.href = 'index.html';
-  }catch(err){
-    showMsg(friendlyError(err), 'error');
-    btn.disabled = false; btn.textContent = 'Log In';
-  }
-});
-
-document.getElementById('forgotBtn').addEventListener('click', async ()=>{
-  const email = document.getElementById('loginEmail').value.trim();
-  if(!email){ showMsg('Type your email above first, then tap "Forgot password?".','error'); return; }
-  try{
-    await auth.sendPasswordResetEmail(email);
-    showMsg('Password reset email sent — check your inbox.', 'success');
-  }catch(err){
-    showMsg(friendlyError(err), 'error');
-  }
-});
-
-/* ---------------- sign up ---------------- */
-document.getElementById('signupForm').addEventListener('submit', async e=>{
-  e.preventDefault();
-  hideMsg();
-  const btn = document.getElementById('signupBtn');
-  const name = document.getElementById('suName').value.trim();
-  const klass = document.getElementById('suClass').value.trim() || 'Grade 11';
-  const email = document.getElementById('suEmail').value.trim();
-  const password = document.getElementById('suPassword').value;
-  const confirm = document.getElementById('suConfirm').value;
-
-  if(password !== confirm){
-    showMsg('Passwords do not match.', 'error');
-    return;
-  }
-
-  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>Creating account...';
-  try{
-    const cred = await auth.createUserWithEmailAndPassword(email, password);
-    await cred.user.updateProfile({ displayName:name, photoURL:selectedAvatar });
-    await db.collection('users').doc(cred.user.uid).set({
-      name, class:klass, email, avatar:selectedAvatar,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    });
-    window.location.href = 'index.html';
-  }catch(err){
-    showMsg(friendlyError(err), 'error');
-    btn.disabled = false; btn.textContent = 'Create Account';
-  }
-});
-</script>
-</body>
-</html>
